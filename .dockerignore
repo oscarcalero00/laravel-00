@@ -1,0 +1,7 @@
+.git
+node_modules
+backend/vendor
+backend/storage
+docker/nginx
+docker/php
+docker/nextjs
