@@ -3,8 +3,8 @@ version: "3.9"
 services:
   backend:
     build:
-      context: .
-      dockerfile: ./docker/php/Dockerfile
+      context: ./backend
+      dockerfile: ../docker/php/Dockerfile
     container_name: laravel_app
     restart: unless-stopped
     working_dir: /var/www/html
@@ -26,8 +26,8 @@ services:
 
   nextjs:
     build:
-      context: .
-      dockerfile: ./docker/nextjs/Dockerfile
+      context: ./frontend
+      dockerfile: ../docker/nextjs/Dockerfile
     container_name: nextjs_app
     ports:
       - "3000:3000"
@@ -40,3 +40,15 @@ services:
     image: mysql:8
     container_name: mysql_db
     restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
