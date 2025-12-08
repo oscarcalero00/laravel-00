@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
+import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
+import type { NextConfig } from 'next';
+
+// Use plugin wrapper as recommended by vanilla-extract
+const withVanillaExtract = createVanillaExtractPlugin();
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  turbopack: {},
 };
 
-export default nextConfig;
+export default withVanillaExtract(nextConfig);
