@@ -7,18 +7,17 @@ import * as styles from '../../../styles/details.css';
 interface Film {
   title: string;
   opening_crawl: string;
-  characters: string[];
+  characters: Character[];
 }
 
 interface Character {
+  id: string;
   name: string;
-  url: string;
 }
 
 export default function FilmDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const [film, setFilm] = useState<Film | null>(null);
-  const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,20 +27,6 @@ export default function FilmDetails({ params }: { params: Promise<{ id: string }
         const response = await fetch(`${apiUrl}/details/movies/${id}`);
         const data = await response.json();
         setFilm(data);
-
-        // Fetch character names
-        const characterPromises = data.characters.map((url: string) =>
-          fetch(url).then((res) => res.json()).then(char => ({ char, url }))
-        );
-        const characterData = await Promise.all(characterPromises);
-        setCharacters(characterData.map(({ char, url }) => {
-          // Handle both swapi.dev and swapi.tech response structures
-          const charProps = char.result?.properties || char;
-          return { 
-            name: charProps.name, 
-            url: url || charProps.url 
-          };
-        }));
       } catch (error) {
         console.error('Error fetching film:', error);
       } finally {
@@ -54,12 +39,6 @@ export default function FilmDetails({ params }: { params: Promise<{ id: string }
 
   if (loading) return <div>Loading...</div>;
   if (!film) return <div>Film not found</div>;
-
-  const getPersonId = (url: string) => {
-    if (!url) return '';
-    const match = url.match(/\/people\/(\d+)\//); 
-    return match ? match[1] : '';
-  };
 
   return (
     <div className={styles.detailsContainer}>
@@ -76,18 +55,15 @@ export default function FilmDetails({ params }: { params: Promise<{ id: string }
         <div className={styles.detailsSection}>
           <h2 className={styles.sectionTitle}>Characters</h2>
           <div className={styles.linkList}>
-            {characters.filter(char => char?.url && char?.name).map((character, index) => {
-              const personId = getPersonId(character.url);
-              return personId ? (
-                <Link
-                  key={character.url || index}
-                  href={`/people/${personId}`}
-                  className={styles.link}
-                >
-                  {character.name}
-                </Link>
-              ) : null;
-            })}
+            {film.characters?.map((character) => (
+              <Link
+                key={character.id}
+                href={`/people/${character.id}`}
+                className={styles.link}
+              >
+                {character.name}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
