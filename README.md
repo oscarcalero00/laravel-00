@@ -67,6 +67,8 @@ docker compose up -d
 - **Backend (Laravel API)**: http://localhost:8080
 - **Base de datos (MySQL)**: localhost:3306
 
+> **Note**: Composer and npm dependencies are installed automatically during the Docker build process. No additional steps needed!
+
 ## Available Commands
 
 ### With Makefile
