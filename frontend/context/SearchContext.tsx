@@ -7,6 +7,7 @@ import type { SwapiPeopleResponse, SwapiPersonResult } from "../types/swapi/peop
 type TypeState = {
   query: string;
   results: Item[];
+  isLoading?: boolean;
 };
 
 type SearchContextValue = {
@@ -25,7 +26,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
 
   function getTypeState(t?: string): TypeState {
     const key = t ?? currentType;
-    return typeMap[key] ?? { query: "", results: [] };
+    return typeMap[key] ?? { query: "", results: [], isLoading: false };
   }
 
   function setTypeState(t: string, state: TypeState) {
@@ -37,7 +38,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     if (prev) {
       setCurrentType(t);
     } else {
-      setTypeMap((prevMap) => ({ ...prevMap, [t]: { query: "", results: [] } }));
+      setTypeMap((prevMap) => ({ ...prevMap, [t]: { query: "", results: [], isLoading: false } }));
       setCurrentType(t);
     }
   }
@@ -47,9 +48,12 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
     const prev = getTypeState(t);
     const q = query ?? prev.query;
     if (!q || q.trim() === "") {
-      setTypeState(t, { query: "", results: [] });
+      setTypeState(t, { query: "", results: [], isLoading: false });
       return;
     }
+
+    // Set loading state
+    setTypeState(t, { query: q, results: prev.results, isLoading: true });
 
     const base = (process.env.NEXT_PUBLIC_API_BASE as string) || "http://localhost:8080";
     const url = `${base}/api/search?type=${encodeURIComponent(t)}&query=${encodeURIComponent(q)}`;
@@ -99,11 +103,11 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         return { id, name, raw: props } as Item;
       });
 
-      setTypeState(t, { query: q, results: mapped });
+      setTypeState(t, { query: q, results: mapped, isLoading: false });
     } catch (error) {
       console.error('Search error', error);
-      // on error, keep previous results but update query
-      setTypeState(t, { query: q, results: getTypeState(t).results });
+      // on error, keep previous results but update query and stop loading
+      setTypeState(t, { query: q, results: getTypeState(t).results, isLoading: false });
     }
   }
 

@@ -9,6 +9,7 @@ import * as styles from "../../styles/search.css";
 export default function SearchPage() {
   const { currentType, getTypeState } = useSearch();
   const state = getTypeState(currentType);
+  const isLoading = state.isLoading ?? false;
 
   console.log("SearchPage render", { currentType, state });
 
@@ -19,7 +20,7 @@ export default function SearchPage() {
 
         <div className={styles.resultsContainer}>
           <h2 className={styles.resultsTitle}>Results</h2>
-          <ResultsList items={state.results} type={currentType} />
+          <ResultsList items={state.results} type={currentType} isLoading={isLoading} />
         </div>
       </div>
     </div>

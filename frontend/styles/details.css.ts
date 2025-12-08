@@ -87,3 +87,17 @@ export const backButton = style({
     backgroundColor: 'rgb(8, 153, 84)',
   },
 });
+
+export const loadingContainer = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '400px',
+});
+
+export const loadingText = style({
+  fontFamily: vars.font.montserrat,
+  fontSize: '14px',
+  fontWeight: 700,
+  color: vars.color.pinkishGrey,
+});

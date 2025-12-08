@@ -78,3 +78,33 @@ export const smallMuted = style({
   fontSize: '14px',
   fontFamily: vars.font.montserrat,
 });
+
+export const loadingContainer = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '400px',
+});
+
+export const loadingText = style({
+  fontFamily: vars.font.montserrat,
+  fontSize: '14px',
+  fontWeight: 700,
+  color: vars.color.pinkishGrey,
+});
+
+export const emptyContainer = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '400px',
+});
+
+export const emptyText = style({
+  fontFamily: vars.font.montserrat,
+  fontSize: '14px',
+  fontWeight: 700,
+  color: vars.color.pinkishGrey,
+  textAlign: 'center',
+  maxWidth: '324px',
+});

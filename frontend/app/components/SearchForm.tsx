@@ -8,6 +8,7 @@ export default function SearchForm() {
   const { currentType, setType, getTypeState, search } = useSearch();
   const state = getTypeState(currentType);
   const [query, setQuery] = useState(state.query ?? "");
+  const isLoading = state.isLoading ?? false;
 
   useEffect(() => {
     // when currentType changes, update local query to stored query
@@ -24,6 +25,10 @@ export default function SearchForm() {
   function onChangeType(t: string) {
     setType(t);
   }
+
+  const placeholder = currentType === "people" 
+    ? "e.g. Chewbacca, Yoda, Boba Fett"
+    : "e.g. Jedi, Clones, Empire";
 
   return (
     <form className={styles.SearchContainer} onSubmit={onSubmit}>
@@ -51,9 +56,11 @@ export default function SearchForm() {
         </label>
       </div>
 
-      <input className={styles.input} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="search..." />
+      <input className={styles.input} value={query} onChange={(e) => setQuery(e.target.value)} placeholder={placeholder} />
 
-      <button className={styles.btn} type="submit">SEARCH</button>
+      <button className={styles.btn} type="submit" disabled={isLoading || !query.trim()}>
+        {isLoading ? "SEARCHING..." : "SEARCH"}
+      </button>
     </form>
   );
 }

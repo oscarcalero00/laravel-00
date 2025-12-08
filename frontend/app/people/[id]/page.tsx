@@ -42,7 +42,13 @@ export default function PersonDetails({ params }: { params: Promise<{ id: string
     fetchPerson();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingText}>Loading...</div>
+      </div>
+    );
+  }
   if (!person) return <div>Person not found</div>;
 
   return (

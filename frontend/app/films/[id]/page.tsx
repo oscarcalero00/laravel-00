@@ -37,7 +37,13 @@ export default function FilmDetails({ params }: { params: Promise<{ id: string }
     fetchFilm();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingText}>Loading...</div>
+      </div>
+    );
+  }
   if (!film) return <div>Film not found</div>;
 
   return (

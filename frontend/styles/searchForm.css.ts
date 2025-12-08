@@ -106,12 +106,14 @@ export const btn = style({
   fontFamily: vars.font.montserrat,
   transition: 'all 0.2s ease',
   selectors: {
-    '&:hover': {
+    '&:hover:not(:disabled)': {
       opacity: 0.9,
     },
     '&:disabled': {
-      opacity: 0.6,
+      opacity: 1,
       cursor: 'not-allowed',
+      backgroundColor: vars.color.pinkishGrey,
+      borderColor: vars.color.pinkishGrey,
     },
   },
 });
