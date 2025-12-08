@@ -74,14 +74,26 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         const id = (it.uid ?? it._id ?? "") as string;
         const props = (it as unknown) as Record<string, unknown>;
         
-        // Try to get name from properties.name first, then fall back to top-level name/title
+        // Map name/title based on type
         let name: string | undefined;
         if (props["properties"] && typeof props["properties"] === "object") {
           const properties = props["properties"] as Record<string, unknown>;
-          name = properties["name"] as string | undefined;
+          
+          // For movies, use title; for people, use name
+          if (t === "movies") {
+            name = properties["title"] as string | undefined;
+          } else {
+            name = properties["name"] as string | undefined;
+          }
         }
+        
+        // Fallback to top-level fields
         if (!name) {
-          name = (props["name"] as string | undefined) ?? (props["title"] as string | undefined) ?? String(id);
+          if (t === "movies") {
+            name = (props["title"] as string | undefined) ?? (props["name"] as string | undefined) ?? String(id);
+          } else {
+            name = (props["name"] as string | undefined) ?? (props["title"] as string | undefined) ?? String(id);
+          }
         }
         
         return { id, name, raw: props } as Item;

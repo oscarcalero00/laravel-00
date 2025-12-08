@@ -42,9 +42,16 @@ class SwapiService
             ];
         }
 
+        $data = $response->json();
+        
+        // Normalize swapi.tech response: extract result.properties
+        if (isset($data['result']['properties'])) {
+            $data = $data['result']['properties'];
+        }
+
         return [
             'success' => true,
-            'data' => $response->json()
+            'data' => $data
         ];
     }
 
