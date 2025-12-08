@@ -1,6 +1,6 @@
 # Star Wars Search Application
 
-Aplicación full-stack para buscar personajes y películas de Star Wars utilizando la API de SWAPI.
+Full-stack application to search for Star Wars characters and movies using the SWAPI API.
 
 ## Tech Stack
 
@@ -20,128 +20,128 @@ Aplicación full-stack para buscar personajes y películas de Star Wars utilizan
 - **Nginx** (Web Server)
 - **MySQL 8** (Database)
 
-## Requisitos Previos
+## Prerequisites
 
-- **Docker** (versión 20.10 o superior)
-- **Docker Compose** (versión 2.0 o superior)
-- **Make** (opcional, para comandos simplificados)
+- **Docker** (version 20.10 or higher)
+- **Docker Compose** (version 2.0 or higher)
+- **Make** (optional, for simplified commands)
 
-> **Nota**: No necesitas tener PHP, Node.js, Composer o npm instalados localmente. Todo corre dentro de contenedores Docker.
+> **Note**: You don't need PHP, Node.js, Composer, or npm installed locally. Everything runs inside Docker containers.
 
-## Instalación y Setup
+## Installation and Setup
 
-### 1. Clonar el repositorio
+### 1. Clone the repository
 
 ```bash
 git clone <repository-url>
 cd laravel-00
 ```
 
-### 2. Construir las imágenes Docker
+### 2. Build Docker images
 
 ```bash
 make build
 ```
 
-O sin Make:
+Or without Make:
 
 ```bash
 docker compose build
 ```
 
-### 3. Levantar los servicios
+### 3. Start services
 
 ```bash
 make up
 ```
 
-O sin Make:
+Or without Make:
 
 ```bash
 docker compose up -d
 ```
 
-### 4. Acceder a la aplicación
+### 4. Access the application
 
 - **Frontend (Next.js)**: http://localhost:3000
 - **Backend (Laravel API)**: http://localhost:8080
 - **Base de datos (MySQL)**: localhost:3306
 
-## Comandos Disponibles
+## Available Commands
 
-### Con Makefile
-
-```bash
-make build          # Construir las imágenes Docker
-make up             # Levantar los servicios
-make down           # Detener los servicios
-make restart        # Reiniciar los servicios
-make logs           # Ver logs de todos los servicios
-make clear-cache    # Limpiar caché de Laravel
-make composer-install   # Instalar dependencias de Composer
-```
-
-### Sin Makefile (Docker Compose directo)
+### With Makefile
 
 ```bash
-docker compose build                    # Construir imágenes
-docker compose up -d                    # Levantar servicios
-docker compose down                     # Detener servicios
-docker compose logs -f                  # Ver logs
-docker compose exec backend php artisan cache:clear  # Limpiar caché
+make build          # Build Docker images
+make up             # Start services
+make down           # Stop services
+make restart        # Restart services
+make logs           # View logs from all services
+make clear-cache    # Clear Laravel cache
+make composer-install   # Install Composer dependencies
 ```
 
-## Estructura del Proyecto
+### Without Makefile (Direct Docker Compose)
+
+```bash
+docker compose build                    # Build images
+docker compose up -d                    # Start services
+docker compose down                     # Stop services
+docker compose logs -f                  # View logs
+docker compose exec backend php artisan cache:clear  # Clear cache
+```
+
+## Project Structure
 
 ```
 laravel-00/
-├── backend/                 # Aplicación Laravel
+├── backend/                 # Laravel application
 │   ├── app/
 │   │   ├── Http/Controllers/
-│   │   ├── Services/       # SwapiService (integración con SWAPI)
+│   │   ├── Services/       # SwapiService (SWAPI integration)
 │   │   └── ...
-│   ├── routes/api.php      # Rutas de la API
+│   ├── routes/api.php      # API routes
 │   └── ...
-├── frontend/               # Aplicación Next.js
+├── frontend/               # Next.js application
 │   ├── app/
-│   │   ├── components/     # Componentes React
-│   │   ├── people/[id]/    # Página de detalles de persona
-│   │   ├── films/[id]/     # Página de detalles de película
-│   │   └── search/         # Página de búsqueda
-│   ├── context/            # SearchContext (estado global)
+│   │   ├── components/     # React components
+│   │   ├── people/[id]/    # Person details page
+│   │   ├── films/[id]/     # Film details page
+│   │   └── search/         # Search page
+│   ├── context/            # SearchContext (global state)
 │   ├── styles/             # Vanilla Extract CSS
 │   └── types/              # TypeScript types
 ├── docker/                 # Dockerfiles
 │   ├── php/
 │   ├── nginx/
 │   └── nextjs/
-├── docker-compose.yml      # Configuración de servicios
-└── Makefile               # Comandos simplificados
+├── docker-compose.yml      # Services configuration
+└── Makefile               # Simplified commands
 ```
 
-## Funcionalidades
+## Features
 
-### 1. Búsqueda de Personajes y Películas
-- Búsqueda en tiempo real utilizando la API de SWAPI
-- Filtrado por tipo (People/Movies)
-- Estados de carga y vacío
-- Caché de resultados por tipo de búsqueda
+### 1. Character and Movie Search
+- Real-time search using SWAPI API
+- Filter by type (People/Movies)
+- Loading and empty states
+- Results cache by search type
 
-### 2. Páginas de Detalles
-- **Personajes**: Información detallada + lista de películas
-- **Películas**: Opening crawl + lista de personajes
-- Navegación entre personajes y películas
+### 2. Detail Pages
+- **Characters**: Detailed information + list of movies
+- **Movies**: Opening crawl + list of characters
+- Navigation between characters and movies
 
-### 3. Optimizaciones Backend
-- **Caching estático**: Reduce llamadas repetidas a SWAPI
-- **Resolución de relaciones**: Personajes y películas pre-resueltos
-- **Normalización de datos**: Estructura consistente de respuestas
+### 3. Backend Optimizations
+- **Static caching**: Reduces repeated SWAPI calls
+- **Relationship resolution**: Pre-resolved characters and movies
+- **Data normalization**: Consistent response structure
 
-### 4. Estados de UI
-- Loading: Indicador animado durante búsquedas
-- Empty: Mensaje cuando no hay resultados
-- Disabled: Botón deshabilitado cuando input está vacío
-- Placeholders dinámicos según tipo seleccionado
+### 4. UI States
+- Loading: Animated indicator during searches
+- Empty: Message when no results found
+- Disabled: Button disabled when input is empty
+- Dynamic placeholders based on selected type
 
 ## API Endpoints
 
@@ -149,21 +149,21 @@ laravel-00/
 
 ```bash
 GET /api/search?type={people|movies}&query={text}
-# Buscar personajes o películas
+# Search for characters or movies
 
 GET /api/details/{type}/{id}
-# Obtener detalles de un personaje o película
+# Get details of a character or movie
 ```
 
-### Integración SWAPI
+### SWAPI Integration
 
-El backend consume la API de SWAPI (swapi.tech) y normaliza las respuestas:
+The backend consumes the SWAPI API (swapi.tech) and normalizes responses:
 
-- **Endpoint SWAPI**: https://swapi.tech/api/
-- **Caché**: Implementado en `SwapiService.php`
-- **Estructura**: Extrae `result.properties` de las respuestas
+- **SWAPI Endpoint**: https://swapi.tech/api/
+- **Cache**: Implemented in `SwapiService.php`
+- **Structure**: Extracts `result.properties` from responses
 
-## Variables de Entorno
+## Environment Variables
 
 ### Frontend (.env.local)
 
@@ -183,25 +183,25 @@ DB_USERNAME=app
 DB_PASSWORD=secret
 ```
 
-## Desarrollo
+## Development
 
 ### Frontend (Next.js)
 
-El frontend se recarga automáticamente con los cambios:
+The frontend automatically reloads with changes:
 
 ```bash
-# Los archivos están montados como volumen
+# Files are mounted as volumes
 cd frontend
-# Edita archivos y verás los cambios en http://localhost:3000
+# Edit files and see changes at http://localhost:3000
 ```
 
 ### Backend (Laravel)
 
 ```bash
-# Ejecutar comandos dentro del contenedor
+# Run commands inside the container
 docker compose exec backend php artisan {command}
 
-# Ejemplos:
+# Examples:
 docker compose exec backend php artisan cache:clear
 docker compose exec backend php artisan route:list
 docker compose exec backend composer install
@@ -209,9 +209,9 @@ docker compose exec backend composer install
 
 ## Design System
 
-El proyecto utiliza un sistema de diseño centralizado con Vanilla Extract:
+The project uses a centralized design system with Vanilla Extract:
 
-### Colores
+### Colors
 - `greenTeal`: rgb(10, 180, 99) - Primary actions
 - `pinkishGrey`: rgb(196, 196, 196) - Placeholders, disabled states
 - `greyBorder`: rgb(218, 218, 218) - Borders
@@ -223,51 +223,51 @@ El proyecto utiliza un sistema de diseño centralizado con Vanilla Extract:
 
 ## Troubleshooting
 
-### Los contenedores no levantan
+### Containers won't start
 
 ```bash
-# Ver logs
+# View logs
 make logs
 
-# Reconstruir desde cero
+# Rebuild from scratch
 make down
 docker system prune -a
 make build
 make up
 ```
 
-### Error de conexión a la base de datos
+### Database connection error
 
 ```bash
-# Verificar que MySQL esté corriendo
+# Check if MySQL is running
 docker compose ps
 
-# Esperar a que MySQL inicie completamente
+# Wait for MySQL to fully initialize
 docker compose logs db
 ```
 
-### Puerto ocupado
+### Port already in use
 
-Si los puertos 3000, 8080 o 3306 están ocupados:
+If ports 3000, 8080, or 3306 are occupied:
 
 ```yaml
-# Editar docker-compose.yml
+# Edit docker-compose.yml
 services:
   nextjs:
     ports:
-      - "3001:3000"  # Cambiar puerto local
+      - "3001:3000"  # Change local port
 ```
 
-### Frontend no muestra datos
+### Frontend doesn't show data
 
-Verificar que `NEXT_PUBLIC_API_URL` apunte al backend correcto:
+Verify that `NEXT_PUBLIC_API_URL` points to the correct backend:
 
 ```bash
 # frontend/.env.local
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 ```
 
-## Recursos
+## Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Laravel Documentation](https://laravel.com/docs)
@@ -275,6 +275,6 @@ NEXT_PUBLIC_API_URL=http://localhost:8080/api
 - [Vanilla Extract](https://vanilla-extract.style/)
 - [Docker Documentation](https://docs.docker.com/)
 
-## Licencia
+## License
 
 MIT
