@@ -13,6 +13,36 @@ services:
     depends_on:
       - db
 
+  queue:
+    build:
+      context: ./backend
+      dockerfile: ../docker/php/Dockerfile
+    container_name: laravel_queue
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    command: php artisan queue:work --sleep=3 --tries=3
+    depends_on:
+      - db
+
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: ../docker/php/Dockerfile
+    container_name: laravel_scheduler
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    command: >
+      sh -c "while true; do
+        php artisan schedule:run --verbose --no-interaction &
+        sleep 60
+      done"
+    depends_on:
+      - db
+
   nginx:
     image: nginx:alpine
     container_name: nginx_server

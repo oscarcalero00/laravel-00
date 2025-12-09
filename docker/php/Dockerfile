@@ -8,11 +8,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY ../backend/composer.json ../backend/composer.lock ./
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-COPY ../backend .
-
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["php-fpm"]

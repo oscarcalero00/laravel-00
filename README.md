@@ -99,11 +99,15 @@ docker compose exec backend php artisan cache:clear  # Clear cache
 laravel-00/
 ├── backend/                 # Laravel application
 │   ├── app/
-│   │   ├── Http/Controllers/
-│   │   ├── Services/       # SwapiService (SWAPI integration)
+│   │   ├── Console/Commands/   # ComputeSwapiStatsCommand
+│   │   ├── Events/            # RecomputeSwapiStats event
+│   │   ├── Jobs/              # ComputeSwapiStats job (queued)
+│   │   ├── Listeners/         # ComputeSwapiStatsListener
+│   │   ├── Http/Controllers/  # SwapiController, StatsController
+│   │   ├── Services/          # SwapiService (SWAPI integration)
 │   │   └── ...
 │   ├── routes/api.php      # API routes
-│   └── ...
+│   └── storage/app/        # swapi_queries.log, swapi_stats.json
 ├── frontend/               # Next.js application
 │   ├── app/
 │   │   ├── components/     # React components
@@ -138,6 +142,8 @@ laravel-00/
 - **Static caching**: Reduces repeated SWAPI calls
 - **Relationship resolution**: Pre-resolved characters and movies
 - **Data normalization**: Consistent response structure
+- **Query logging**: All requests logged for analytics
+- **Statistics system**: Event-driven stats computation every 5 minutes
 
 ### 4. UI States
 - Loading: Animated indicator during searches
@@ -155,7 +161,44 @@ GET /api/search?type={people|movies}&query={text}
 
 GET /api/details/{type}/{id}
 # Get details of a character or movie
+
+GET /api/stats
+# Get query statistics (updated every 5 minutes)
 ```
+
+### Statistics Endpoint
+
+The `/api/stats` endpoint returns statistics about previous queries, computed every 5 minutes via an event and queue system:
+
+**Example Response:**
+```json
+{
+  "total_requests": 150,
+  "top_queries": [
+    {
+      "query": "luke",
+      "count": 45,
+      "percentage": 30.0
+    },
+    {
+      "query": "vader",
+      "count": 30,
+      "percentage": 20.0
+    }
+  ],
+  "average_duration_ms": 245.67,
+  "most_popular_hour": 14,
+  "generated_at": "2025-12-09T10:00:00.000000Z"
+}
+```
+
+**How it works:**
+1. Every request to `/search` and `/details` is logged to `storage/app/swapi_queries.log`
+2. A scheduled command runs every 5 minutes: `swapi:compute-stats`
+3. The command dispatches a `RecomputeSwapiStats` event
+4. A listener queues the `ComputeSwapiStats` job
+5. The job processes the logs and generates statistics in `storage/app/swapi_stats.json`
+6. The `/api/stats` endpoint reads and returns this data
 
 ### SWAPI Integration
 
