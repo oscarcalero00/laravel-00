@@ -5,12 +5,23 @@ export const searchPage = style({
   padding: '40px',
   minHeight: '100vh',
   background: '#ededed',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      padding: '20px',
+    },
+  },
 });
 
 export const searchLayout = style({
   display: 'flex',
   gap: '30px',
   maxWidth: '1200px',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      flexDirection: 'column',
+      gap: '20px',
+    },
+  },
 });
 
 export const resultsContainer = style({
@@ -20,6 +31,13 @@ export const resultsContainer = style({
   border: `1px solid ${vars.color.greyBorder}`,
   borderRadius: '4px',
   boxShadow: '0 1px 2px 0 rgba(132, 132, 132, 0.75)',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      minWidth: '100%',
+      width: '100%',
+      padding: '20px',
+    },
+  },
 });
 
 export const resultsTitle = style({

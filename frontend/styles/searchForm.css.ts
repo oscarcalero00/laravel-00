@@ -9,6 +9,13 @@ export const SearchContainer = style({
   boxShadow: '0 1px 2px 0 rgba(132, 132, 132, 0.75)',
   border: `1px solid ${vars.color.greyBorder}`,
   backgroundColor: vars.color.white,
+  '@media': {
+    'screen and (max-width: 768px)': {
+      width: '100%',
+      height: 'auto',
+      padding: '20px',
+    },
+  },
 });
 
 export const WhatAreYouSearchingFor = style({
