@@ -10,9 +10,7 @@ export default function SearchPage() {
   const { currentType, getTypeState } = useSearch();
   const state = getTypeState(currentType);
   const isLoading = state.isLoading ?? false;
-
-  console.log("SearchPage render", { currentType, state });
-
+  
   return (
     <div className={styles.searchPage}>
       <div className={styles.searchLayout}>
