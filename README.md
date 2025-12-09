@@ -252,6 +252,89 @@ docker compose exec backend php artisan route:list
 docker compose exec backend composer install
 ```
 
+## Testing Statistics API
+
+The statistics endpoint can be tested at any time to see aggregated query data:
+
+### Test the Stats Endpoint
+
+```bash
+# Get current statistics
+curl http://localhost:8080/api/stats | jq
+
+# Or visit in browser
+open http://localhost:8080/api/stats
+```
+
+### Example Test Workflow
+
+1. **Make some searches** to generate data:
+```bash
+curl "http://localhost:8080/api/search?type=people&query=luke"
+curl "http://localhost:8080/api/search?type=people&query=vader"
+curl "http://localhost:8080/api/search?type=movies&query=jedi"
+```
+
+2. **Trigger stats computation manually** (optional):
+```bash
+docker compose exec backend php artisan swapi:compute-stats
+```
+
+3. **Check the statistics**:
+```bash
+curl http://localhost:8080/api/stats | jq
+```
+
+Expected output:
+```json
+{
+  "total_requests": 3,
+  "top_queries": [
+    {"query": "luke", "count": 1, "percentage": 33.33},
+    {"query": "vader", "count": 1, "percentage": 33.33},
+    {"query": "jedi", "count": 1, "percentage": 33.33}
+  ],
+  "average_duration_ms": 1523.45,
+  "most_popular_hour": 16,
+  "generated_at": "2025-12-09T16:45:23.456789Z"
+}
+```
+
+### Background Services for Stats
+
+The statistics are automatically computed every 5 minutes by two Docker services:
+
+- **`laravel_scheduler`**: Runs the Laravel scheduler (`php artisan schedule:work`)
+- **`laravel_queue`**: Processes queued jobs (`php artisan queue:work`)
+
+You can monitor these services:
+
+```bash
+# Check scheduler logs
+docker compose logs scheduler -f
+
+# Check queue worker logs
+docker compose logs queue -f
+
+# Check all services status
+docker compose ps
+```
+
+### Stats Data Location
+
+- **Query logs**: `backend/storage/app/swapi_queries.log`
+- **Computed stats**: `backend/storage/app/swapi_stats.json`
+
+You can inspect these files directly:
+
+```bash
+# View recent queries
+docker compose exec backend tail -20 storage/app/swapi_queries.log
+
+# View computed statistics
+docker compose exec backend cat storage/app/swapi_stats.json | jq
+```
+
 ## Design System
 
 The project uses a centralized design system with Vanilla Extract:
